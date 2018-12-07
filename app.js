@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 
 app.post("/tasks/new",function(req,res){
     
-    MongoClient.connect(url,function(err, mgClient){
+    MongoClient.connect(url, function(err, mgClient){
 
         if(err){ 
             console.log("Error in connection");
@@ -35,16 +35,27 @@ app.post("/tasks/new",function(req,res){
     })
 
 })
-// app.get("/tasks",function(req,res){
-//     MongoClient.connect(url,function(err,db){
-//         if(!err){
-//             let tasks=db.collection('tasks');
-//             tasks.find({}).toArray(function(err, results){
-//                 res.send(JSON.stringify(results));
-//             })
-//         }
-//     })
-// })
+
+app.get("/tasks", function(req, res){
+    console.log("Inside tasks GET function");
+    MongoClient.connect(url,function(err, mgClient){
+        if(!err){
+            console.log("no error");
+            let db = mgClient.db("amazingtodoapp");
+            let tasks= db.collection('tasks');
+
+            tasks.find({}).toArray(function(err, results){
+                res.send(JSON.stringify(results));
+            })
+        }else {
+            console.log("Error is "+err.stack);
+        }
+    })
+})
+
+app.get("/",function(req,res){
+        res.sendFile(__dirname +"/index.html")
+})
 
 // app.put("/tasks/update/:id",function(req,res){
 //     MongoClient.connect(url,function(err,db){
