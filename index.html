@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sample Todo list</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel='stylesheet' href='style.css' />
+	<link rel="manifest" href="/manifest.json">
+	<link rel="shortcut icon" href="/todo.png"/>
+</head>
+<body>
+	<!-- <p class="todo-title">Todo List</p>
+	<hr/>
+	<button class="add-item" onclick="addNewTask(this)">Add New Task</button>
+	<div id="new-task" class="new-task">
+		<form action='/tasks/new/' method='post'>
+			<input name='info'   />
+			<button type='submit' class="submit">Submit</button>
+		</form>
+	</div> -->
+
+    <ul id="task-area">
+	
+    </ul>
+    
+    <form action="/tasks/new" method="POST">
+        <input type="text" name="description" placeholder="write yout task">
+        <input type="submit">
+	</form>
+	
+	<div id="tasks">
+	</div>
+	<!-- <form action="/tasks/update" method="PUT">
+        <input type="text" name="description" >
+        <input type="Update"> -->
+
+	<div id="update-area">
+	</div>
+
+
+	<script>
+		fetch("/tasks").then(function(res){
+			res.json().then(function(data){
+				data.forEach(function(tasks){
+					console.log("Inside the fetch")
+					let taskhtml = document.createElement("li");
+					let deletebutton = document.createElement('button');
+					let updatebutton = document.createElement('button');
+					deletebutton.innerHTML="delete this task";
+					updatebutton.innerHTML="update this task";
+					
+					updatebutton.addEventListener('click',function(){
+						updatetask(task._id,task.description);
+					})
+
+					taskhtml.innerHTML=task.description;
+					document.getElementById('task-area').append(taskhtml);
+					document.getElementById('task-area').append(deletebutton);
+					document.getElementById('task-area').append(updatebutton);
+
+						})
+				});
+			})
+		function updatetask(objectid,description){
+				let input = document.createElement('input');
+				input.placeholder = description;
+				input.id = "updateinput";
+				let submitupdate = document.createElement('button');
+				submitupdate.innerText = "submit changes";
+				submitupdate.addEventListener('click',function(){
+				fetch('/tasks/update/'+ objectid,{
+					 method:'PUT', 
+					 body:JSON.stringify({
+					description: 
+					document.getElementById('updateinput').value,
+					}),
+					Headers: {
+					"Content-Type":"application/json"
+					}
+				
+				});
+			})	
+			document.getElementById('update-area').append(input);
+			document.getElementById('update-area').append(submitupdate);
+		}
+
+			
+		
+	</script>
+
+	
+</body>
+</html>
